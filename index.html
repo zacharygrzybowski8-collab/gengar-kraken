@@ -1,1 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gengar Kraken</title>
 
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #2a003f, #000000);
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    /* Gengar Image */
+    #gengar {
+      position: absolute;
+      width: 70%;
+      max-width: 400px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      image-rendering: pixelated;
+
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 25px rgba(180, 0, 255, 0.8));
+    }
+
+    /* Floating animation */
+    @keyframes float {
+      0% { transform: translate(-50%, -50%) translateY(0); }
+      50% { transform: translate(-50%, -50%) translateY(-15px); }
+      100% { transform: translate(-50%, -50%) translateY(0); }
+    }
+
+    /* Glow pulse background */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: radial-gradient(circle, rgba(128,0,255,0.15), transparent 70%);
+      animation: pulse 4s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
+    /* Stats display */
+    #stats {
+      position: absolute;
+      bottom: 15px;
+      left: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      text-shadow: 0 0 10px purple;
+    }
+  </style>
+</head>
+
+<body>
+
+  <img id="gengar" src="gengar.png">
+
+  <div id="stats">
+    Loading...
+  </div>
+
+  <script>
+    const isKraken = window.location.search.includes("kraken=1");
+
+    if (isKraken) {
+      // 🔥 LIVE PC STATS
+      window.nzxt.v1.onMonitoringDataUpdate = (data) => {
+
+        const cpu = Math.round(data.cpus[0].load);
+        const gpu = Math.round(data.gpus[0].load);
+        const ram = Math.round(data.ram.usedPercentage);
+
+        document.getElementById("stats").innerText =
+          `CPU: ${cpu}%  GPU: ${gpu}%  RAM: ${ram}%`;
+
+        // 👻 Mood changes based on CPU load
+        const gengar = document.getElementById("gengar");
+
+        if (cpu > 75) {
+          gengar.style.filter = "drop-shadow(0 0 40px red)";
+          document.body.style.background = "radial-gradient(circle, #3a0000, black)";
+        } else if (cpu > 40) {
+          gengar.style.filter = "drop-shadow(0 0 30px purple)";
+          document.body.style.background = "radial-gradient(circle, #2a003f, black)";
+        } else {
+          gengar.style.filter = "drop-shadow(0 0 20px #8000ff)";
+          document.body.style.background = "radial-gradient(circle, #1a002a, black)";
+        }
+      };
+
+    } else {
+      // ⚙️ CONFIG SCREEN (optional)
+      document.body.innerHTML = `
+        <div style="padding:20px;">
+          <h2>👻 Gengar Kraken Settings</h2>
+          <p>This is your configuration screen.</p>
+          <p>Load this in NZXT CAM to see the live display.</p>
+        </div>
+      `;
+    }
+  </script>
+
+</body>
+</html>
