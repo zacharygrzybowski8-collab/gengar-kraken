@@ -72,7 +72,8 @@
   </div>
 
   <script>
-    const isKraken = window.location.search.includes("kraken=1");
+    const params = new URLSearchParams(window.location.search);
+    const isKraken = params.get("kraken") === "1";
 
     if (isKraken) {
       // 🔥 LIVE PC STATS
